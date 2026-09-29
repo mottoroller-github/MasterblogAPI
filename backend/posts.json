@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "title": "First post",
+    "content": "This is the first post.",
+    "author": "Alice",
+    "date": "2025-01-01"
+  },
+  {
+    "id": 2,
+    "title": "Second post",
+    "content": "This is the second post.",
+    "author": "Bob",
+    "date": "2025-07-15"
+  },
+  {
+    "id": 3,
+    "title": "My First Blog Post",
+    "content": "This is the content of my first blog post.",
+    "author": "Max",
+    "date": "2026-08-27"
+  },
+  {
+    "id": 4,
+    "title": "Flask Tutorial",
+    "content": "This post explains Flask.",
+    "author": "Anna",
+    "date": "2026-09-15"
+  },
+  {
+    "id": 5,
+    "title": "Greetings",
+    "content": "Hello everyone",
+    "author": "Nana",
+    "date": "2026-09-28"
+  }
+]
