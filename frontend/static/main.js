@@ -8,6 +8,59 @@ window.onload = function() {
     }
 };
 
+// Function for displaying posts
+function displayPosts(data) {
+    const postContainer = document.getElementById('post-container');
+    postContainer.innerHTML = '';
+
+    data.forEach(post => {
+        const postDiv = document.createElement('div');
+        postDiv.className = 'post';
+
+        const title = document.createElement('h2');
+        title.textContent = post.title;
+
+        const content = document.createElement('p');
+        content.className = 'post-content';
+        content.textContent = post.content;
+
+        const meta = document.createElement('p');
+        meta.className = 'post-meta';
+
+        const authorLabel = document.createElement('strong');
+        authorLabel.textContent = 'Author: ';
+
+        const author = document.createElement('span');
+        author.textContent = post.author;
+
+        const separator = document.createElement('span');
+        separator.textContent = ' • ';
+
+        const dateLabel = document.createElement('strong');
+        dateLabel.textContent = 'Date: ';
+
+        const date = document.createElement('span');
+        date.textContent = post.date;
+
+        meta.append(
+            authorLabel,
+            author,
+            separator,
+            dateLabel,
+            date
+        );
+
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.addEventListener('click', () => {
+            deletePost(post.id);
+        });
+
+        postDiv.append(title, content, meta, deleteButton);
+        postContainer.appendChild(postDiv);
+    });
+}
+
 
 // Function to fetch posts and display them
 function loadPosts() {
@@ -33,26 +86,7 @@ function loadPosts() {
             return response.json();
         })
         .then(data => {
-            const postContainer = document.getElementById('post-container');
-            postContainer.innerHTML = '';
-
-            data.forEach(post => {
-                const postDiv = document.createElement('div');
-                postDiv.className = 'post';
-
-                postDiv.innerHTML = `
-                    <h2>${post.title}</h2>
-                    <p class="post-content">${post.content}</p>
-                    <p class="post-meta">
-                        <strong>Author:</strong> ${post.author}
-                        <span>•</span>
-                        <strong>Date:</strong> ${post.date}
-                    </p>
-                    <button onclick="deletePost(${post.id})">Delete</button>
-                `;
-
-                postContainer.appendChild(postDiv);
-            });
+            displayPosts(data);
         })
         .catch(error => console.error('Error:', error));
 }
@@ -60,15 +94,25 @@ function loadPosts() {
 
 // Function to search posts
 function searchPosts() {
-    var baseUrl = document.getElementById('api-base-url').value;
-    var searchQuery = document.getElementById('search-input').value;
+    var baseUrl = document.getElementById('api-base-url').value.trim();
+    var titleQuery = document.getElementById('search-title').value.trim();
+    var contentQuery = document.getElementById('search-content').value.trim();
 
-    if (!searchQuery) {
+    if (!titleQuery && !contentQuery) {
         loadPosts();
         return;
     }
 
-    fetch(baseUrl + '/posts/search?search=' + encodeURIComponent(searchQuery))
+    var params = new URLSearchParams();
+
+    if (titleQuery) {
+        params.append('title', titleQuery);
+    }
+    if (contentQuery) {
+        params.append('content', contentQuery);
+    }
+
+    fetch(baseUrl + '/posts/search?' + params.toString())
         .then(response => {
             if (!response.ok) {
                 throw new Error('Could not search posts.');
@@ -76,26 +120,7 @@ function searchPosts() {
             return response.json();
         })
         .then(data => {
-            const postContainer = document.getElementById('post-container');
-            postContainer.innerHTML = '';
-
-            data.forEach(post => {
-                const postDiv = document.createElement('div');
-                postDiv.className = 'post';
-
-                postDiv.innerHTML = `
-                    <h2>${post.title}</h2>
-                    <p class="post-content">${post.content}</p>
-                    <p class="post-meta">
-                        <strong>Author:</strong> ${post.author}
-                        <span>•</span>
-                        <strong>Date:</strong> ${post.date}
-                    </p>
-                    <button onclick="deletePost(${post.id})">Delete</button>
-                `;
-
-                postContainer.appendChild(postDiv);
-            });
+            displayPosts(data);
         })
         .catch(error => console.error('Error:', error));
 }
